@@ -4,6 +4,7 @@ import { useLocalStore, useObserver } from 'mobx-react-lite'
 
 import './app.css'
 import { Nav } from './components/nav'
+import { Container } from './components/container'
 
 const StoreContext = React.createContext()
 
@@ -32,9 +33,19 @@ export const App = () => {
 
   return (
     <StoreProvider>
-      <Nav />
-      <h1>Mobx Store</h1>
-      <TestStore />
+      <section className="hero is-dark is-bold">
+        <div className="hero-head">
+          <Nav />
+        </div>
+        <div className="hero-body">
+          <div className="container has-text-centered">
+            <h1 className="title">E-Commerce</h1>
+            {/* <h2 className="subtitle"></h2> */}
+          </div>
+        </div>
+      </section>
+      <Container />
+      {/* <TestStore /> */}
     </StoreProvider>
   )
 }
