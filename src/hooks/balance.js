@@ -1,16 +1,15 @@
-import { useEffect,useContext } from 'react'
+import { useEffect, useContext } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 import useSWR from 'swr'
 import { from } from 'rxjs'
 
-import { StoreContext } from "../app";
+import { StoreContext } from '../store'
 
 export const useBalance = () => {
   const { account, library } = useWeb3React()
   const { data: balance, mutate } = useSWR(['getBalance', account, 'latest'])
   const store = useContext(StoreContext)
-
 
   console.log('mobx balance', store.balanceM)
 
@@ -40,4 +39,27 @@ export const useBalance = () => {
 
   if (!balance) return 0
   return parseFloat(ethers.utils.formatEther(balance)).toPrecision(6)
+}
+
+const TestStore = () => {
+  const store = useContext(StoreContext)
+  // trace(true)
+
+  useEffect(() => {
+    store.getBalance()
+    console.log(store.getBalance())
+  }, [])
+
+  const { account } = useWeb3React()
+  const balance = useBalance()
+
+  return useObserver(() => (
+    <div>
+      <h2>{store.test}</h2>
+      <h2>{account}</h2>
+      <h2>{balance}</h2>
+      <h2>bm: {store.balance}</h2>
+      <h2>state: {store.state}</h2>
+    </div>
+  ))
 }

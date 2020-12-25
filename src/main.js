@@ -4,11 +4,17 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { SWRConfig } from 'swr'
 import { ethers } from 'ethers'
 // import Web3 from 'web3'
+// import { enableLogging } from 'mobx-logger'
 
+import { Store, StoreContext } from './store'
 import { ethFetcher } from './utils/ethFetcher'
 import { App } from './app'
 
 const injectedConnector = new InjectedConnector({})
+
+const store = new Store()
+// debug store
+window.__STORE__ = store
 
 export const Main = () => {
   return (
@@ -19,25 +25,29 @@ export const Main = () => {
 }
 
 const MainRun = () => {
-  const { library, activate, active } = useWeb3React()
+  const { library, account, activate, active } = useWeb3React()
 
   useEffect(() => {
     activate(injectedConnector)
   }, [])
 
-  if (!active) return <div>turn on web3</div>
+  if (!active) return <h1>turn on web3</h1>
+
+  store.init(library, account)
 
   return (
     <SWRConfig value={{ fetcher: ethFetcher(library, []) }}>
-      <App />
+      <StoreContext.Provider value={store}>
+        <App />
+      </StoreContext.Provider>
     </SWRConfig>
   )
 }
 
 const getLibrary = (provider) => {
   const library = new ethers.providers.Web3Provider(provider)
-  window.library = library
   // const library = new Web3(provider)
   // library.pollingInterval = 12000
+
   return library
 }
