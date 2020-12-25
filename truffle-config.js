@@ -8,7 +8,7 @@ module.exports = {
     development: {
       host: '127.0.0.1',
       port: 8545,
-      network_id: '*',
+      network_id: 777,
       skipDryRun: true,
     },
     rinkeby: {
@@ -32,7 +32,7 @@ module.exports = {
   api_keys: {
     etherscan: ETHERSCAN_API_KEY,
   },
-  contracts_build_directory: './src/abis/',
+  contracts_build_directory: './src/contracts/',
   compilers: {
     solc: {
       version: '0.7.3',

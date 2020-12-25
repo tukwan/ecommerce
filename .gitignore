@@ -1,6 +1,6 @@
 .vscode
 flats
-src/abis
+src/contracts
 
 # dependencies
 /node_modules

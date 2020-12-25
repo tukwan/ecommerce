@@ -2,6 +2,8 @@ import { createContext } from 'react'
 import { runInAction, makeAutoObservable } from 'mobx'
 import { ethers } from 'ethers'
 
+import MarsToken from './contracts/MarsToken.json'
+
 export class Store {
   library = null
   account = 0
@@ -15,6 +17,17 @@ export class Store {
     this.library = library
     this.account = account
     this.getBalance()
+    this.loadContract()
+  }
+
+  async loadContract() {
+    try {
+      const contract = new ethers.Contract(MarsToken.networks[777].address, MarsToken.abi, this.library.getSigner())
+      let balance = await contract.balanceOf(this.account)
+      console.log(balance.toString())
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   async getBalance() {

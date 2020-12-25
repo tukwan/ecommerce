@@ -7,7 +7,7 @@
   "scripts": {
     "m": "truffle migrate --reset",
     "c": "truffle compile",
-    "g": "ganache-cli -d",
+    "g": "ganache-cli -d -i 777",
     "deploy": "truffle migrate --reset --network rinkeby",
     "start": "react-scripts start",
     "build": "react-scripts build"
