@@ -2,8 +2,9 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const http = require('http')
+const HDNode = require('ethers').utils.HDNode
+const eUtils = require('ethers').utils
 const bip39 = require('bip39')
-const hdkey = require('hdkey')
 
 const app = express()
 
@@ -22,26 +23,25 @@ const server = app.listen(process.env.PORT || 5000, () => {
 
 const pathId = 0
 const mnemonic = bip39.generateMnemonic()
-console.log('BIP39 mnemonic:', mnemonic)
+console.log('mnemonic:', mnemonic)
+
+const entropy = eUtils.mnemonicToEntropy(mnemonic)
+console.log('entropy:', entropy)
+
+const seed = eUtils.mnemonicToSeed(mnemonic)
+const masterNode = HDNode.fromSeed(seed)
+
+console.log('privateKey:', masterNode.privateKey)
+console.log('publicKey:', masterNode.publicKey)
+console.log('chainCode:', masterNode.chainCode)
+console.log('path:', masterNode.path)
+const path = "m/44'/60'/0'/0/" + pathId
+
+const addrNode = masterNode.derivePath(path)
+console.log('addrNode:',addrNode)
 
 app.get('/api/getAddress', (req, res) => {
-  const main = async () => {
-    const seed = await bip39.mnemonicToSeed(mnemonic)
-    console.log('seed:', seed)
-    // res.send(JSON.stringify(seed))
-    const root = hdkey.fromMasterSeed(seed)
-    const mPrivateKey = root.privateKey.toString('hex')
-    console.log('Master private key:', mPrivateKey)
-    const mPublicKey = root.publicKey.toString('hex')
-    console.log('Master public key:', mPublicKey)
 
-    const path = "m/44'/60'/0'/0/" + pathId
-    console.log('root:', root)
-    const addrNode = root.derive(path)
-    console.log('path:', path)
-    console.log('addrNode:', addrNode)
-  }
-  main()
 })
 
 http.get('http://localhost:5000/api/getAddress', function (res) {
