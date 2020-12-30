@@ -3,8 +3,8 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const http = require('http')
 const HDNode = require('ethers').utils.HDNode
-const eUtils = require('ethers').utils
-const bip39 = require('bip39')
+// const eUtils = require('ethers').utils
+// const bip39 = require('bip39')
 
 const app = express()
 
@@ -21,40 +21,43 @@ const server = app.listen(process.env.PORT || 5000, () => {
   console.log('HDWallet on:', port)
 })
 
-const pathId = 0
-const mnemonic = bip39.generateMnemonic()
+// const mnemonic = bip39.generateMnemonic()
+const mnemonic = 'spell tube glove enroll soldier someone cattle husband lawn runway approve cabin'
 console.log('mnemonic:', mnemonic)
 
-const entropy = eUtils.mnemonicToEntropy(mnemonic)
-console.log('entropy:', entropy)
+// * Under the Hood *
+// .fromMnemonic {
+// mnemonic = entropyToMnemonic(mnemonicToEntropy(mnemonic, wordlist), wordlist);
+// return HDNode._fromSeed(mnemonicToSeed(mnemonic, password)) ...
+// }
 
-const seed = eUtils.mnemonicToSeed(mnemonic)
-const masterNode = HDNode.fromSeed(seed)
-
+const masterNode = HDNode.fromMnemonic(mnemonic)
+// console.log('masterNode:', masterNode)
 console.log('privateKey:', masterNode.privateKey)
 console.log('publicKey:', masterNode.publicKey)
-console.log('chainCode:', masterNode.chainCode)
-console.log('path:', masterNode.path)
-const path = "m/44'/60'/0'/0/" + pathId
 
-const addrNode = masterNode.derivePath(path)
-console.log('addrNode:',addrNode)
+let pathId = 0
 
 app.get('/api/getAddress', (req, res) => {
+  const path = "m/44'/60'/0'/0/" + pathId
 
+  const addrNode = masterNode.derivePath(path)
+  // console.log('addrNode:', addrNode)
+  res.send(JSON.stringify({ address: addrNode.address, path: addrNode.path }))
+
+  pathId++
 })
 
-http.get('http://localhost:5000/api/getAddress', function (res) {
-  console.log('test')
-  let data = ''
+for (let i = 0; i < 3; i++) {
+  http.get('http://localhost:5000/api/getAddress', function (res) {
+    let data = ''
 
-  res.on('data', function (chunk) {
-    console.log('test2')
-    data += chunk
-  })
+    res.on('data', function (chunk) {
+      data += chunk
+    })
 
-  res.on('end', function () {
-    console.log('test3')
-    console.log(data)
+    res.on('end', function () {
+      console.log(data)
+    })
   })
-})
+}
