@@ -1,6 +1,8 @@
 import React from 'react'
 import { useWeb3React } from '@web3-react/core'
 
+import {Product} from './product'
+
 export const Container = () => {
   const { chainId, account } = useWeb3React()
   const [isActive, setisActive] = React.useState(false)
@@ -13,6 +15,7 @@ export const Container = () => {
             <div className="card-content">
               <div className="content">
                 <h4>Tristique senectus et netus et. </h4>
+                <Product />
                 <p>
                   Purus semper eget duis at tellus at urna condimentum mattis. Non blandit massa enim nec. Integer enim
                   neque volutpat ac tincidunt vitae semper quis. Accumsan tortor posuere ac ut consequat semper viverra
