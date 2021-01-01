@@ -3,11 +3,13 @@ import { runInAction, makeAutoObservable } from 'mobx'
 import { ethers } from 'ethers'
 
 import MarsToken from './contracts/MarsToken.json'
+import { PRODUCTS } from './data/products'
 
 export class Store {
   library = null
   account = 0
   balance = 0
+  products = PRODUCTS
 
   constructor() {
     makeAutoObservable(this)
