@@ -5,13 +5,13 @@ import { observer } from 'mobx-react-lite'
 import { StoreContext } from '../store'
 
 export const Payment = observer(() => {
-  const { activeProduct } = useContext(StoreContext)
+  const {ethPrice, activeProduct } = useContext(StoreContext)
   const { img, name, price } = activeProduct
-  const store = useContext(StoreContext)
+  const priceToPay = price / ethPrice
 
   const handleBack = () => {
     runInAction(() => {
-      store.activeProduct = null
+      activeProduct = null
     })
   }
 
@@ -32,12 +32,12 @@ export const Payment = observer(() => {
         <div className="content">
           <div className="columns is-multiline ">
             <div className="column is-12 has-text-centered">
-              <h3 className="has-text-weight-bold">ETH payment address:</h3>
+              <h3 className="has-text-weight-bold">ETH Payment Address:</h3>
               <span className="tag is-warning is-light is-large">0x14B3b82fEE9B42136019581c8C6c3DF608E93Fb9</span>
             </div>
             <div className="column is-12 has-text-centered">
-              <h3 className="has-text-weight-bold">Amount:</h3>
-              <span className="tag is-warning is-light is-large">10 $</span>
+              <h3 className="has-text-weight-bold">~Price in ETH:</h3>
+              <span className="tag is-warning is-light is-large">{priceToPay}</span>
             </div>
           </div>
           <div className="field is-grouped is-grouped-centered">

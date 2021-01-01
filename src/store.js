@@ -11,6 +11,7 @@ export class Store {
   balance = 0
   products = PRODUCTS
   activeProduct = null
+  ethPrice = 0
 
   constructor() {
     makeAutoObservable(this)
@@ -20,6 +21,7 @@ export class Store {
     this.library = library
     this.account = account
     this.getBalance()
+    this.getETHPrice()
     this.loadContract()
   }
 
@@ -40,9 +42,22 @@ export class Store {
         this.balance = parseFloat(ethers.utils.formatEther(bm)).toPrecision(6)
       })
     } catch (e) {
+      console.log(e)
+    }
+  }
+
+  async getETHPrice() {
+    try {
+      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
+      const data = await res.json()
+      const {
+        ethereum: { usd },
+      } = data
       runInAction(() => {
-        console.log(e)
+        this.ethPrice = usd
       })
+    } catch (e) {
+      console.log(e)
     }
   }
 }
