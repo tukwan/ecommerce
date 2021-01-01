@@ -1,24 +1,24 @@
 import React, { useContext } from 'react'
-import { useWeb3React } from '@web3-react/core'
-import { useObserver } from 'mobx-react-lite'
+import { observer } from 'mobx-react-lite'
 
 import { StoreContext } from '../store'
 import { Product } from './product'
+import { Payment } from './payment'
 
-export const Container = () => {
-  const { chainId, account } = useWeb3React()
-  const [isActive, setisActive] = React.useState(false)
-  const { products } = useContext(StoreContext)
+export const Container = observer(() => {
+  const { products, activeProduct } = useContext(StoreContext)
 
-  return useObserver(() => (
-    <section className="container">
-      <div className="columns">
-        {products.map((product, i) => (
-          <div key={i} className="column is-4">
-            <Product product={product} />
-          </div>
-        ))}
+  const renderProducts = () => {
+    return products.map((product, i) => (
+      <div key={i} className="column is-4">
+        <Product product={product} />
       </div>
+    ))
+  }
+
+  return (
+    <section className="container">
+      <div className="columns is-centered">{activeProduct ? <Payment /> : renderProducts()}</div>
     </section>
-  ))
-}
+  )
+})

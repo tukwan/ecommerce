@@ -10,6 +10,7 @@ export class Store {
   account = 0
   balance = 0
   products = PRODUCTS
+  activeProduct = null
 
   constructor() {
     makeAutoObservable(this)

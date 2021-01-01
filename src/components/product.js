@@ -1,10 +1,19 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useWeb3React } from '@web3-react/core'
+import { runInAction } from 'mobx'
+import { observer } from 'mobx-react-lite'
 
-export const Product = (props) => {
-  const { chainId, account } = useWeb3React()
-  const [isActive, setisActive] = React.useState(false)
+import { StoreContext } from '../store'
+
+export const Product = observer((props) => {
+  const store = useContext(StoreContext)
   const { img, name, price } = props.product
+
+  const setActive = () => {
+    runInAction(() => {
+      store.activeProduct = props.product
+    })
+  }
 
   return (
     <div className="card is-shady">
@@ -36,10 +45,10 @@ export const Product = (props) => {
         </div>
       </div>
       <footer className="card-footer">
-        <a href="#" className="card-footer-item">
+        <a href="#" className="card-footer-item" onClick={setActive}>
           Buy
         </a>
       </footer>
     </div>
   )
-}
+})
