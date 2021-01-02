@@ -1,13 +1,34 @@
 import React, { useContext } from 'react'
 import { runInAction } from 'mobx'
 import { observer } from 'mobx-react-lite'
+import { useWeb3React } from '@web3-react/core'
+import { ethers } from 'ethers'
+import web3 from 'web3'
 
 import { StoreContext } from '../store'
 
 export const Payment = observer(() => {
-  const {ethPrice, activeProduct } = useContext(StoreContext)
+  const { library, account } = useWeb3React()
+  const { ethPrice, activeProduct } = useContext(StoreContext)
   const { img, name, price } = activeProduct
   const priceToPay = price / ethPrice
+
+  const payWithMM = async () => {
+    const gasPrice = await library.getGasPrice()
+
+    console.log(gasPrice.toString())
+    const params = [
+      {
+        from: account,
+        to: '0x1Da897E2C64a273c8B6Af30966F9dE2Df65E6F10',
+        gasPrice: web3.utils.toHex(gasPrice.toString()),
+        value: ethers.utils.parseEther(`${priceToPay}`).toHexString(),
+      },
+    ]
+
+    library.send('eth_sendTransaction', params)
+    // console.log('transactionHash is ' + transactionHash)
+  }
 
   const handleBack = () => {
     runInAction(() => {
@@ -47,7 +68,9 @@ export const Payment = observer(() => {
               </a>
             </p>
             <p className="control">
-              <a className="button is-link">Metamask Pay</a>
+              <a className="button is-link" onClick={payWithMM}>
+                Pay with Metamask
+              </a>
             </p>
           </div>
         </div>

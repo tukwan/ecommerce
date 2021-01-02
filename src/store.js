@@ -1,6 +1,7 @@
 import { createContext } from 'react'
 import { runInAction, makeAutoObservable } from 'mobx'
 import { ethers } from 'ethers'
+import axios from 'axios'
 
 import MarsToken from './contracts/MarsToken.json'
 import { PRODUCTS } from './data/products'
@@ -10,8 +11,10 @@ export class Store {
   account = 0
   balance = 0
   products = PRODUCTS
-  activeProduct = null
+  // activeProduct = null
+  activeProduct = PRODUCTS[0]
   ethPrice = 0
+  gasPrices = null
 
   constructor() {
     makeAutoObservable(this)
@@ -23,6 +26,7 @@ export class Store {
     this.getBalance()
     this.getETHPrice()
     this.loadContract()
+    this.getGasPrices()
   }
 
   async loadContract() {
@@ -48,13 +52,28 @@ export class Store {
 
   async getETHPrice() {
     try {
-      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
-      const data = await res.json()
+      const res = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
       const {
         ethereum: { usd },
-      } = data
+      } = res.data
       runInAction(() => {
         this.ethPrice = usd
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  async getGasPrices() {
+    try {
+      const res = await axios.get('https://ethgasstation.info/json/ethgasAPI.json')
+      const prices = {
+        low: res.data.safeLow / 10,
+        medium: res.data.average / 10,
+        high: res.data.fast / 10,
+      }
+      runInAction(() => {
+        this.gasPrices = prices
       })
     } catch (e) {
       console.log(e)
@@ -63,3 +82,4 @@ export class Store {
 }
 
 export const StoreContext = createContext()
+
