@@ -1,6 +1,7 @@
 import { createContext } from 'react'
 import { runInAction, makeAutoObservable } from 'mobx'
 import { ethers } from 'ethers'
+import { utils } from 'web3'
 import axios from 'axios'
 
 import MarsToken from './contracts/MarsToken.json'
@@ -25,7 +26,7 @@ export class Store {
     this.account = account
     this.getBalance()
     this.getETHPrice()
-    this.loadContract()
+    // this.loadContract()
     this.getGasPrices()
   }
 
@@ -41,9 +42,9 @@ export class Store {
 
   async getBalance() {
     try {
-      const bm = await this.library.getBalance(this.account, 'latest')
+      const bal = await this.library.eth.getBalance(this.account, 'latest')
       runInAction(() => {
-        this.balance = parseFloat(ethers.utils.formatEther(bm)).toPrecision(6)
+        this.balance = parseFloat(utils.fromWei(bal, 'ether')).toPrecision(6)
       })
     } catch (e) {
       console.log(e)
@@ -82,4 +83,3 @@ export class Store {
 }
 
 export const StoreContext = createContext()
-

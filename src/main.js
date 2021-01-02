@@ -2,8 +2,8 @@ import React, { useEffect } from 'react'
 import { Web3ReactProvider, useWeb3React } from '@web3-react/core'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { SWRConfig } from 'swr'
-import { ethers } from 'ethers'
-// import Web3 from 'web3'
+import { toJS } from 'mobx'
+import Web3 from 'web3'
 // import { enableLogging } from 'mobx-logger'
 
 import { Store, StoreContext } from './store'
@@ -14,7 +14,11 @@ const injectedConnector = new InjectedConnector({})
 
 const store = new Store()
 // debug store
-window.__STORE__ = store
+window.s = {
+  get s() {
+    return toJS(store)
+  },
+}
 
 export const Main = () => {
   return (
@@ -45,8 +49,8 @@ const MainRun = () => {
 }
 
 const getLibrary = (provider) => {
-  const library = new ethers.providers.Web3Provider(provider)
-  // const library = new Web3(provider)
+  // const library = new ethers.providers.Web3Provider(provider)
+  const library = new Web3(provider)
   // library.pollingInterval = 12000
 
   return library
