@@ -80,6 +80,7 @@ export class Store {
       console.log(e)
     }
   }
+
 }
 
 export const StoreContext = createContext()

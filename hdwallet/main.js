@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const http = require('http')
 const HDNode = require('ethers').utils.HDNode
+const web3 = require('web3')
 // const eUtils = require('ethers').utils
 // const bip39 = require('bip39')
 
@@ -40,10 +41,14 @@ let pathId = 0
 
 app.get('/api/getAddress', (req, res) => {
   const path = "m/44'/60'/0'/0/" + pathId
-
   const addrNode = masterNode.derivePath(path)
-  // console.log('addrNode:', addrNode)
-  res.send(JSON.stringify({ address: addrNode.address, path: addrNode.path }))
+
+  console.log('Generated address:', addrNode.address)
+  console.log('Generated checksum:', web3.utils.toChecksumAddress(addrNode.address))
+  console.log('Generated path:', addrNode.path)
+
+  const toSend = JSON.stringify({ address: addrNode.address, path: addrNode.path })
+  res.send(toSend)
 
   pathId++
 })
@@ -57,7 +62,7 @@ for (let i = 0; i < 3; i++) {
     })
 
     res.on('end', function () {
-      console.log(data)
+      // console.log(data)
     })
   })
 }

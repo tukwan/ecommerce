@@ -1,19 +1,28 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { runInAction } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import { useWeb3React } from '@web3-react/core'
 import { utils } from 'web3'
+import axios from 'axios'
 
 import { StoreContext } from '../store'
+import { TimePayment } from './timePayment'
 
 export const Payment = observer(() => {
   const { library, account } = useWeb3React()
-  const { ethPrice, gasPrices, activeProduct } = useContext(StoreContext)
+  const store = useContext(StoreContext)
+  const { ethPrice, gasPrices, activeProduct } = store
   const { img, name, price } = activeProduct
   const priceToPay = price / ethPrice
 
+  const [paymentAddress, setPaymentAddress] = useState('0x0')
   const [txHash, setTxHash] = useState(null)
   const [txLoading, setTxLoading] = useState(false)
+  const [isTimePayment, setIsTimePayment] = useState(false)
+
+  useEffect(() => {
+    getPaymentAddress()
+  }, [])
 
   const payWithMM = async () => {
     const txData = {
@@ -34,10 +43,25 @@ export const Payment = observer(() => {
     }
   }
 
+  const getPaymentAddress = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/getAddress')
+      const { address } = res.data
+      setPaymentAddress(address)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   const handleBack = () => {
     runInAction(() => {
-      activeProduct = null
+      store.activeProduct = null
     })
+  }
+
+  const timePayment = () =>  {
+
+
   }
 
   return (
@@ -58,7 +82,7 @@ export const Payment = observer(() => {
           <div className="columns is-multiline ">
             <div className="column is-12 has-text-centered">
               <h3 className="has-text-weight-bold">ETH Payment Address:</h3>
-              <span className="tag is-warning is-light is-large">0x14B3b82fEE9B42136019581c8C6c3DF608E93Fb9</span>
+              <span className="tag is-warning is-light is-large">{paymentAddress}</span>
             </div>
             <div className="column is-12 has-text-centered">
               <h3 className="has-text-weight-bold">~Price in ETH:</h3>
@@ -84,6 +108,7 @@ export const Payment = observer(() => {
               </div>
             )}
           </div>
+          <TimePayment />
           <div className="field is-grouped is-grouped-centered">
             <p className="control">
               <a className="button is-danger" onClick={handleBack}>
@@ -93,6 +118,11 @@ export const Payment = observer(() => {
             <p className="control">
               <a className="button is-link" onClick={payWithMM}>
                 Pay with Metamask
+              </a>
+            </p>
+            <p className="control">
+              <a className="button is-link" onClick={payWithMM}>
+                Pay with Transfer
               </a>
             </p>
           </div>
