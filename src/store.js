@@ -4,7 +4,7 @@ import { ethers } from 'ethers'
 import { utils } from 'web3'
 import axios from 'axios'
 
-import MarsToken from './contracts/MarsToken.json'
+// import MarsToken from './contracts/MarsToken.json'
 import { PRODUCTS } from './data/products'
 
 export class Store {
@@ -30,15 +30,15 @@ export class Store {
     this.getGasPrices()
   }
 
-  async loadContract() {
-    try {
-      const contract = new ethers.Contract(MarsToken.networks[777].address, MarsToken.abi, this.library.getSigner())
-      let balance = await contract.balanceOf(this.account)
-      console.log(balance.toString())
-    } catch (e) {
-      console.log(e)
-    }
-  }
+  // async loadContract() {
+  //   try {
+  //     const contract = new ethers.Contract(MarsToken.networks[777].address, MarsToken.abi, this.library.getSigner())
+  //     let balance = await contract.balanceOf(this.account)
+  //     console.log(balance.toString())
+  //   } catch (e) {
+  //     console.log(e)
+  //   }
+  // }
 
   async getBalance() {
     try {
