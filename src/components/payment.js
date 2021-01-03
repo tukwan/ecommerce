@@ -59,9 +59,8 @@ export const Payment = observer(() => {
     })
   }
 
-  const timePayment = () =>  {
-
-
+  const payWithTime = () => {
+    setIsTimePayment(!isTimePayment)
   }
 
   return (
@@ -85,7 +84,7 @@ export const Payment = observer(() => {
               <span className="tag is-warning is-light is-large">{paymentAddress}</span>
             </div>
             <div className="column is-12 has-text-centered">
-              <h3 className="has-text-weight-bold">~Price in ETH:</h3>
+              <h3 className="has-text-weight-bold">Price in ETH:</h3>
               <span className="tag is-warning is-light is-large">{priceToPay}</span>
             </div>
             {gasPrices && (
@@ -108,7 +107,7 @@ export const Payment = observer(() => {
               </div>
             )}
           </div>
-          <TimePayment />
+          {isTimePayment && <TimePayment setTxLoading={setTxLoading} />}
           <div className="field is-grouped is-grouped-centered">
             <p className="control">
               <a className="button is-danger" onClick={handleBack}>
@@ -121,7 +120,7 @@ export const Payment = observer(() => {
               </a>
             </p>
             <p className="control">
-              <a className="button is-link" onClick={payWithMM}>
+              <a className="button is-link" onClick={payWithTime}>
                 Pay with Transfer
               </a>
             </p>

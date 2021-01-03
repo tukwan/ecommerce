@@ -25,6 +25,7 @@
     "mobx": "^6.0.4",
     "mobx-logger": "^0.7.1",
     "mobx-react-lite": "^3.1.6",
+    "moment": "^2.29.1",
     "ramda": "^0.27.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
