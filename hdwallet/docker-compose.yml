@@ -1,0 +1,9 @@
+version: "3.7"
+
+services:
+  hdwallet:
+    build: .
+    ports:
+      - 5000:5000
+    volumes:
+      - ./:/hdwallet
