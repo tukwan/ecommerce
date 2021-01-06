@@ -1,47 +1,78 @@
-import React, { useContext, useState, useEffect } from 'react'
-import { runInAction, observable } from 'mobx'
+import React, { useContext, useState, useEffect, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useWeb3React } from '@web3-react/core'
-import { utils } from 'web3'
-import axios from 'axios'
 import moment from 'moment'
 
 import { StoreContext } from '../store'
 
 export const TimePayment = observer((props) => {
-  const { library, account } = useWeb3React()
+  const { library } = useWeb3React()
   const store = useContext(StoreContext)
-  const { setTxLoading } = props
+  const { paymentAddress, priceToPay, setTxHash, setTxLoading } = props
 
   const [timer, setTimer] = useState(0)
+  const [isPayed, setIsPayed] = useState(false)
   const [balance, setBalance] = useState(0)
 
+  const intervalRef = useRef(null)
+  const clearTimer = () => {
+    clearInterval(intervalRef.current)
+    intervalRef.current = null
+  }
+
   useEffect(() => {
-    const timeHandle = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       const newTimer = timer + 1
       setTimer(newTimer)
     }, 1000)
 
     return () => {
-      clearInterval(timeHandle)
+      clearTimer()
     }
   }, [timer])
 
   useEffect(() => {
-    const balanceHandle = setInterval(() => {
-      verify()
-    }, 4000)
     setTxLoading(true)
 
+    const sub = library.eth.subscribe('newBlockHeaders', function (err, res) {
+      if (!err) {
+        verify()
+        return
+      }
+      console.error('err', err)
+    })
+
     return () => {
-      clearInterval(balanceHandle)
       setTxLoading(false)
+      sub.unsubscribe(function (err, succs) {
+        if (succs) console.log('Successfully unsubscribed!')
+      })
     }
   }, [])
 
   const verify = async () => {
-    // const balance = await library.eth.getBalance('0xA01caBAaAf53E2835F89d3CCe25A2242A4abAEF6')
-    // console.log('balance:', balance)
+    if (isPayed) return
+    const balance = await library.eth.getBalance(paymentAddress)
+    const balanceFormat = library.utils.fromWei(`${balance}`, 'ether')
+
+    const BN = library.utils.BN
+
+    const balanceBN = new BN(`${balance}`)
+
+    const priceToPayWei = library.utils.toWei(`${priceToPay}`, 'ether')
+    const priceToPayBN = new BN(priceToPayWei)
+
+    const isPayedRecieved = balanceBN.gte(priceToPayBN)
+
+    setBalance(balanceFormat)
+
+    if (isPayedRecieved) {
+      setTxLoading(false)
+      setTxHash('123')
+      setIsPayed(true)
+      clearTimer()
+      return
+    }
   }
 
   const counter = moment(15, 'm').subtract(timer, 's').format('mm:ss')

@@ -107,7 +107,14 @@ export const Payment = observer(() => {
               </div>
             )}
           </div>
-          {isTimePayment && <TimePayment setTxLoading={setTxLoading} />}
+          {isTimePayment && (
+            <TimePayment
+              paymentAddress={paymentAddress}
+              priceToPay={priceToPay}
+              setTxHash={setTxHash}
+              setTxLoading={setTxLoading}
+            />
+          )}
           <div className="field is-grouped is-grouped-centered">
             <p className="control">
               <a className="button is-danger" onClick={handleBack}>
