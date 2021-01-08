@@ -9,7 +9,7 @@ export const Container = observer(() => {
 
   return (
     <section className="container">
-      <div className="columns is-centered">
+      <div className="columns is-mobile is-centered">
         <Wallet />
       </div>
     </section>
