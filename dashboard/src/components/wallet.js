@@ -1,15 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import { runInAction } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import { utils } from 'ethers'
 import moment from 'moment'
 
-import { StoreContext } from '../store'
-
-export const Wallet = observer((props) => {
-  const store = useContext(StoreContext)
-  const { library, account } = useWeb3React()
+export const Wallet = observer(() => {
+  const { library } = useWeb3React()
   const [transactions, setTransactions] = useState(null)
 
   useEffect(() => {
@@ -25,7 +21,7 @@ export const Wallet = observer((props) => {
 
     const accounts = []
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
       const path = "m/44'/60'/0'/0/" + i
       const addrNode = masterNode.derivePath(path)
 
@@ -42,11 +38,7 @@ export const Wallet = observer((props) => {
       }
     }
 
-    console.log('accounts', accounts)
-
-    const transactions = await getTransactionsByAccount(library, accounts[0], 0)
-
-    console.log('txxxxx', transactions)
+    const transactions = await getTransactionsByAccount(library, accounts, 0)
     setTransactions(transactions)
   }
 
@@ -55,25 +47,25 @@ export const Wallet = observer((props) => {
       {transactions &&
         transactions.map((tx, i) => (
           <div key={i}>
-            <div className="columns is-mobile is-vcentered">
+            <div className="columns is-multiline is-vcentered">
               <div className="column">
-                <div class="field is-grouped is-grouped-multiline">
-                  <div class="control">
-                    <div class="tags has-addons">
-                      <span class="tag">Block number</span>
-                      <span class="tag is-link">{tx.blockNumber}</span>
+                <div className="field is-grouped is-grouped-multiline">
+                  <div className="control">
+                    <div className="tags has-addons">
+                      <span className="tag">Block number</span>
+                      <span className="tag is-link">{tx.blockNumber}</span>
                     </div>
                   </div>
-                  <div class="control">
-                    <div class="tags has-addons">
-                      <span class="tag">Confirmations</span>
-                      <span class="tag is-warning">{tx.confirmations} / 12</span>
+                  <div className="control">
+                    <div className="tags has-addons">
+                      <span className="tag">Confirmations</span>
+                      <span className="tag is-warning">{tx.confirmations} / 12</span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="columns is-mobile is-vcentered">
+            <div className="columns is-multiline is-vcentered">
               <div className="column is-3">
                 <p className="has-text-weight-bold">Tx hash:</p>
               </div>
@@ -81,7 +73,7 @@ export const Wallet = observer((props) => {
                 <p className="tag is-warning is-light">{tx.hash}</p>
               </div>
             </div>
-            <div className="columns is-mobile is-vcentered">
+            <div className="columns is-multiline is-vcentered">
               <div className="column is-3">
                 <p className="has-text-weight-bold">HDWallet addres:</p>
               </div>
@@ -89,7 +81,7 @@ export const Wallet = observer((props) => {
                 <p className="tag is-warning is-light is-medium">{tx.to}</p>
               </div>
             </div>
-            <div className="columns is-mobile is-vcentered">
+            <div className="columns is-multiline is-vcentered">
               <div className="column is-3">
                 <p className="has-text-weight-bold">Address from:</p>
               </div>
@@ -97,7 +89,7 @@ export const Wallet = observer((props) => {
                 <p className="tag is-warning is-light is-medium">{tx.from}</p>
               </div>
             </div>
-            <div className="columns is-mobile is-vcentered">
+            <div className="columns is-multiline is-vcentered">
               <div className="column is-3">
                 <p className="has-text-weight-bold">ETH value:</p>
               </div>
@@ -105,7 +97,7 @@ export const Wallet = observer((props) => {
                 <p className="tag is-warning is-light is-medium">{tx.value}</p>
               </div>
             </div>
-            <div className="columns is-mobile is-vcentered">
+            <div className="columns is-multiline is-vcentered">
               <div className="column is-3">
                 <p className="has-text-weight-bold">Date:</p>
               </div>
@@ -120,7 +112,7 @@ export const Wallet = observer((props) => {
   )
 })
 
-const getTransactionsByAccount = async (web3, account, startBlockNumber, endBlockNumber) => {
+const getTransactionsByAccount = async (web3, accounts, startBlockNumber, endBlockNumber) => {
   if (endBlockNumber == null) {
     endBlockNumber = await web3.eth.getBlockNumber()
   }
@@ -138,7 +130,7 @@ const getTransactionsByAccount = async (web3, account, startBlockNumber, endBloc
 
     if (block != null && block.transactions != null) {
       for (let tx of block.transactions) {
-        if (account == tx.to) {
+        if (accounts.includes(tx.to)) {
           console.log('Transaction found on block: ' + blockNumber)
           const confirmations = endBlockNumber - blockNumber
           const txObj = {
@@ -158,5 +150,3 @@ const getTransactionsByAccount = async (web3, account, startBlockNumber, endBloc
 
   return result.reverse()
 }
-
-// await web3.eth.sendTransaction({ from: "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1", to: '0x24D294fc35Ed473FD5d976C71AA79f39A28Fae3F', value: web3.utils.toWei('0.4', "ether")})

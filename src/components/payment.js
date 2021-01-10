@@ -27,7 +27,7 @@ export const Payment = observer(() => {
   const payWithMM = async () => {
     const txData = {
       from: account,
-      to: '0x1Da897E2C64a273c8B6Af30966F9dE2Df65E6F10',
+      to: paymentAddress,
       gasPrice: utils.toWei(`${gasPrices.medium}`, 'gwei'),
       value: utils.toWei(`${priceToPay}`, 'ether'),
     }
