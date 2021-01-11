@@ -14,7 +14,7 @@ export const App = () => {
         </div>
         <div className="hero-body">
           <div className="container has-text-centered">
-            <h1 className="title">Guitar Shop</h1>
+            <h1 className="title">Bitcoin Mugs Shop</h1>
             {/* <h2 className="subtitle"></h2> */}
           </div>
         </div>

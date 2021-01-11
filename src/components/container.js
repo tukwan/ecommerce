@@ -18,7 +18,7 @@ export const Container = observer(() => {
 
   return (
     <section className="container">
-      <div className="columns is-centered">{activeProduct ? <Payment /> : renderProducts()}</div>
+      <div className="columns is-centered mt-2">{activeProduct ? <Payment /> : renderProducts()}</div>
     </section>
   )
 })

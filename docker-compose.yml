@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  client:
+    build: ./
+    ports:
+      - 3002:80
+
+  dashboard:
+    build: ./dashboard
+    ports:
+      - 3001:80
+
+  hdwallet:
+    build: ./hdwallet
+    ports:
+      - 5000:6000

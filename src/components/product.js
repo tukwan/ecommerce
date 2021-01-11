@@ -16,9 +16,9 @@ export const Product = observer((props) => {
   }
 
   return (
-    <div className="card is-shady">
-      <div className="card-image">
-        <figure className="image is-16by9">
+    <div className="card is-shady pt-5">
+      <div className="card-image is-flex is-justify-content-center">
+        <figure className="image is-128x128">
           <img src={img} alt="item1" />
         </figure>
       </div>
@@ -26,7 +26,7 @@ export const Product = observer((props) => {
         <div className="media">
           <div className="media-left">
             <figure className="image is-48x48">
-              <img src="https://gateway.ipfs.io/ipfs/QmQXg7WAvGngteWxJMS4cjoHi5uXwJjxqAoJKqnPL7kxrc" alt="logo" />
+              <img src="https://gateway.ipfs.io/ipfs/QmPXRaYH5cpoCcvenB2XY5bRYsBkefqpXgmmv4LuEukbUr" alt="logo" />
             </figure>
           </div>
           <div className="media-content">
@@ -36,16 +36,15 @@ export const Product = observer((props) => {
         </div>
         <div className="content">
           <p>
-            Purus semper eget duis at tellus at urna condimentum mattis. Non blandit massa enim nec. Integer enim neque
-            volutpat ac tincidunt vitae semper quis. Accumsan tortor posuere ac ut consequat semper viverra nam.
-          </p>
-          <p>
-            <a href="#">Read more</a>
+            A purely peer-to-peer version of electronic cash would allow online payments to be sent directly from one
+            party to another without going through a financial institution. Digital signatures provide part of the
+            solution, but the main benefits are lost if a trusted third party is still required to prevent
+            double-spending. We propose a solution to the double-spending problem using a peer-to-peer network.
           </p>
         </div>
       </div>
       <footer className="card-footer">
-        <a href="#" className="card-footer-item" onClick={setActive}>
+        <a href="#" className="card-footer-item has-text-weight-bold" onClick={setActive}>
           Buy
         </a>
       </footer>

@@ -17,7 +17,7 @@ app.use(
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-const server = app.listen(process.env.PORT || 5000, () => {
+const server = app.listen(process.env.PORT || 6000, () => {
   const port = server.address().port
   console.log('HDWallet on:', port)
 })
@@ -53,16 +53,16 @@ app.get('/api/getAddress', (req, res) => {
   pathId++
 })
 
-for (let i = 0; i < 3; i++) {
-  http.get('http://localhost:5000/api/getAddress', function (res) {
-    let data = ''
+// for (let i = 0; i < 3; i++) {
+//   http.get('http://localhost:5000/api/getAddress', function (res) {
+//     let data = ''
 
-    res.on('data', function (chunk) {
-      data += chunk
-    })
+//     res.on('data', function (chunk) {
+//       data += chunk
+//     })
 
-    res.on('end', function () {
-      // console.log(data)
-    })
-  })
-}
+//     res.on('end', function () {
+//       // console.log(data)
+//     })
+//   })
+// }
