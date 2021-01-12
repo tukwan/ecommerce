@@ -44,8 +44,10 @@ export const Payment = observer(() => {
   }
 
   const getPaymentAddress = async () => {
+    const apiUrl = process.env.NODE_ENV === 'production' ? 'http://52.59.243.101' : 'http://localhost'
+
     try {
-      const res = await axios.get('http://localhost:5000/api/getAddress')
+      const res = await axios.get(`${apiUrl}:5000/api/getAddress`)
       const { address } = res.data
       setPaymentAddress(address)
     } catch (err) {

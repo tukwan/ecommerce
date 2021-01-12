@@ -14,3 +14,9 @@ scp -i ../../ubuntu.pem ecommerce_hdwallet.tar.gz ubuntu@ec2-52-59-243-101.eu-ce
 docker load < ecommerce_client.tar.gz ;
 docker load < ecommerce_dashboard.tar.gz ;
 docker load < ecommerce_hdwallet.tar.gz
+
+
+
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+
