@@ -22,7 +22,7 @@ export const Wallet = observer(() => {
 
     const accounts = []
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 20; i++) {
       const path = "m/44'/60'/0'/0/" + i
       const addrNode = masterNode.derivePath(path)
 
@@ -83,7 +83,7 @@ export const Wallet = observer(() => {
 
   return (
     <div className="column is-9-desktop mt-5 p-5 is-shady">
-      <p className="tag is-warning is-light is-large mb-4 pl-0">Searching block: {blocksLoader}</p>
+      <p className="tag is-warning is-light is-large mb-4 pl-0">Searching block: {blocksLoader} (-100 blocks)</p>
       {transactions &&
         transactions.map((tx, i) => (
           <div key={i}>

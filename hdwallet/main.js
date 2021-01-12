@@ -17,7 +17,7 @@ app.use(
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-const server = app.listen(process.env.PORT || 6000, () => {
+const server = app.listen(process.env.PORT || 5000, () => {
   const port = server.address().port
   console.log('HDWallet on:', port)
 })
@@ -42,6 +42,9 @@ let pathId = 0
 app.get('/api/getAddress', (req, res) => {
   const path = "m/44'/60'/0'/0/" + pathId
   const addrNode = masterNode.derivePath(path)
+
+  // reset
+  if (pathId > 19) pathId = 0
 
   console.log('Generated address:', addrNode.address)
   console.log('Generated checksum:', web3.utils.toChecksumAddress(addrNode.address))

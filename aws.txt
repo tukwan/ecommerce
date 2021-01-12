@@ -1,0 +1,16 @@
+Commands
+————
+
+docker save ecommerce_client | gzip > ecommerce_client.tar.gz ;
+docker save ecommerce_dashboard | gzip > ecommerce_dashboard.tar.gz ;
+docker save ecommerce_hdwallet | gzip > ecommerce_hdwallet.tar.gz
+
+
+scp -i ../../ubuntu.pem ecommerce_client.tar.gz ubuntu@ec2-52-59-243-101.eu-central-1.compute.amazonaws.com:~/. ;
+scp -i ../../ubuntu.pem ecommerce_dashboard.tar.gz ubuntu@ec2-52-59-243-101.eu-central-1.compute.amazonaws.com:~/. ;
+scp -i ../../ubuntu.pem ecommerce_hdwallet.tar.gz ubuntu@ec2-52-59-243-101.eu-central-1.compute.amazonaws.com:~/.
+
+
+docker load < ecommerce_client.tar.gz ;
+docker load < ecommerce_dashboard.tar.gz ;
+docker load < ecommerce_hdwallet.tar.gz
